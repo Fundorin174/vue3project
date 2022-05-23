@@ -1,14 +1,10 @@
 <template >
   <form @submit.prevent>
-    <input 
-      v-model='post.title'
-      class="input" 
-      type="text" 
+    <my-input 
+      v-model='post.title'      
       placeholder="Название" />
-    <input 
+    <my-input 
       v-model='post.body' 
-      class="input" 
-      type='text' 
       placeholder="Описание" />
     <my-button 
       @click="addPost"
@@ -47,9 +43,5 @@ export default {
     justify-content: flex-end;
     width: 400px;
   }
-  .input {
-    width: 100%;
-    border: 2px solid teal;
-    margin-bottom: 10px;
-  }
+
 </style>
