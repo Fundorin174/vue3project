@@ -4,7 +4,7 @@
       <div><strong>Пост о</strong>{{' '+ post.title}}</div>
       <div><strong>Описание</strong>{{' '+ post.body}}</div>
     </div>
-    <my-button style='align-self: flex-end'>
+    <my-button @click="onRemove" style='align-self: flex-end'>
        Удалить
     </my-button>    
   </div>
@@ -17,7 +17,12 @@ export default {
       type: Object,
       required: true
     }
-  }
+  },
+  methods: {
+    onRemove(){
+      this.$emit('remove', this.post)
+    }
+    }
 }
 </script>
 <style >
