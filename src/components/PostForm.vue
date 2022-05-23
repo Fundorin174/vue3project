@@ -10,10 +10,14 @@
       class="input" 
       type='text' 
       placeholder="Описание" />
-    <button class="btn" @click="addPost">Добавить</button>
+    <my-button 
+      @click="addPost"
+      style='align-self: flex-end'
+      >Добавить</my-button>
   </form>
 </template>
 <script>
+
 export default {
   data () {
     return {
@@ -47,9 +51,5 @@ export default {
     width: 100%;
     border: 2px solid teal;
     margin-bottom: 10px;
-  }
-  .btn {
-    margin: 20px 0;
-    align-self: flex-end;
   }
 </style>

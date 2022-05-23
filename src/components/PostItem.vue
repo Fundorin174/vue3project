@@ -1,10 +1,16 @@
 <template >
   <div class="post" >
-    <div><strong>Пост о</strong>{{' '+ post.title}}</div>
-    <div><strong>Описание</strong>{{' '+ post.body}}</div>
+    <div>
+      <div><strong>Пост о</strong>{{' '+ post.title}}</div>
+      <div><strong>Описание</strong>{{' '+ post.body}}</div>
+    </div>
+    <my-button style='align-self: flex-end'>
+       Удалить
+    </my-button>    
   </div>
 </template>
 <script>
+
 export default {
   props: {
     post: {
@@ -15,5 +21,14 @@ export default {
 }
 </script>
 <style >
-  
+    .post {
+    padding: 15px;
+    border: 2px solid teal;
+    margin-bottom: 10px;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
 </style>
