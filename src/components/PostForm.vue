@@ -1,5 +1,6 @@
 <template >
   <form @submit.prevent>
+    <h2 class="header">Новый пост</h2>
     <my-input 
       v-model='post.title'      
       placeholder="Название" />
@@ -22,7 +23,7 @@ export default {
         body: '',
       }
     }
-  },
+  },  
   methods: {
     addPost(){
       this.post.id = Date.now() + Math.random()
@@ -31,7 +32,6 @@ export default {
         title: '',
         body: ''
       }
-      
     }
   },  
 }
@@ -42,6 +42,9 @@ export default {
     flex-direction: column;
     justify-content: flex-end;
     width: 400px;
+  }
+  .header {
+    margin-bottom: 10px;
   }
 
 </style>

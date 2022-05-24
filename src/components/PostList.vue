@@ -1,6 +1,6 @@
 <template >
-  <div>
-    <p>Список постов</p>
+  <div v-if='posts.length > 0'>
+    <h2>Список постов</h2>
     <post-item  
       v-for="post in posts" 
       :post='post'
@@ -8,6 +8,7 @@
       @remove="$emit('remove', post)"
      />
   </div>
+  <h2 v-else>Список постов пуст</h2>
 </template>
 <script>
 import PostItem from './PostItem.vue'
@@ -22,5 +23,7 @@ export default {
 }
 </script>
 <style scoped>
-
+  h2 {
+    margin: 10px 0;
+  }
 </style>

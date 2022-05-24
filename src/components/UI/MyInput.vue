@@ -19,5 +19,6 @@ export default {
     width: 100%;
     border: 2px solid teal;
     margin-bottom: 10px;
+    padding: 10px;
   }
 </style>

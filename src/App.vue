@@ -1,7 +1,11 @@
 <template>
-  <div>
-  <post-form @create='addPost' />
-  <post-list :posts="posts" @remove='removePost' /> 
+  <div class="app">
+    <h1>Страница с постами</h1>
+    <my-button @click="openDialog" style='margin-top: 10px; margin-bottom: 10px;'>Создать пост</my-button>
+    <my-dialog v-model:show="isDialogVisible" >
+      <post-form @create='addPost' />
+    </my-dialog>  
+    <post-list :posts="posts" @remove='removePost' /> 
   </div>
 </template>
 
@@ -20,14 +24,19 @@ export default {
               {id: 3, title: 'React', body: 'Описание поста 3'},
               {id: 4, title: 'Angular', body: 'Описание поста 4'},
             ],
+            isDialogVisible: false,
         }
     },
     methods: {      
       addPost(postItem){
          this.posts = [...this.posts, postItem];
+         this.isDialogVisible = false
       },
       removePost(postItem){
         this.posts = this.posts.filter(p=>p.id !== postItem.id);
+      },
+      openDialog() {
+        this.isDialogVisible = true
       }
     }
 
