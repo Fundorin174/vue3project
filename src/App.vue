@@ -1,11 +1,18 @@
 <template>
   <div class="app">
     <h1>Страница с постами</h1>
-    <my-button @click="openDialog" style='margin-top: 10px; margin-bottom: 10px;'>Создать пост</my-button>
+    <div class="app__buttons">
+      <my-button @click="openDialog" >Создать пост        
+      </my-button>
+      <my-select 
+        v-model="selectedSort"
+        :options='sortOptons'
+      />
+    </div>
     <my-dialog v-model:show="isDialogVisible" >
       <post-form @create='addPost' />
     </my-dialog>  
-    <post-list :posts="posts" @remove='removePost' v-if="!isPostsLoading" /> 
+    <post-list :posts="sortedPosts" @remove='removePost' v-if="!isPostsLoading" /> 
     <h2 v-else>Идет загрузка...</h2>
   </div>
 </template>
@@ -14,21 +21,36 @@
 import PostForm from '@/components/PostForm.vue';
 import PostList from '@/components/PostList.vue';
 import MyButton from './components/UI/MyButton.vue';
+import MySelect from './components/UI/MySelect.vue';
 import axios from 'axios';
 export default {
   components: {
     PostForm, PostList,
-    MyButton
+    MyButton, MySelect
   },
     data() {
         return {
             posts: [],
             isDialogVisible: false,
             isPostsLoading: false,
+            selectedSort: '',
+            sortOptons: [
+              {value: 'title', name: 'По названию'},
+              {value: 'body', name: 'По описанию'},
+              {value: 'id', name: 'По Id'},
+            ]
         }
     },
     mounted() {
       this.fetchPosts();
+    },
+    watch: {
+
+    },
+    computed: {
+      sortedPosts(){
+        return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]));
+      }
     },
     methods: {      
       addPost(postItem){
@@ -67,6 +89,12 @@ export default {
     padding: 20px;
   }
 
+  .app__buttons{
+    margin-top: 10px; 
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
   
   
 </style>

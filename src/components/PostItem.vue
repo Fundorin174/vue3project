@@ -30,7 +30,7 @@ export default {
     padding: 15px;
     border: 2px solid teal;
     margin-bottom: 10px;
-    width: 400px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
