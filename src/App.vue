@@ -1,6 +1,7 @@
 <template>
   <div class="app">
     <h1>Страница с постами</h1>
+    <my-input v-model="searchingQuery" placeholder='Поиск' />
     <div class="app__buttons">
       <my-button @click="openDialog" >Создать пост        
       </my-button>
@@ -12,8 +13,20 @@
     <my-dialog v-model:show="isDialogVisible" >
       <post-form @create='addPost' />
     </my-dialog>  
-    <post-list :posts="sortedPosts" @remove='removePost' v-if="!isPostsLoading" /> 
+    <post-list :posts="sortedFilteredPosts" @remove='removePost' v-if="!isPostsLoading" /> 
     <h2 v-else>Идет загрузка...</h2>
+    <div class="pagination__wrapper">
+      <div 
+        :key="pageNumber" 
+        v-for="pageNumber in totalPages" 
+        @click="changePage(pageNumber)"
+        class="pagination__item"
+        :class= "{
+          'current-page': pageNumber === page
+        }" >
+          {{pageNumber}}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,6 +47,10 @@ export default {
             isDialogVisible: false,
             isPostsLoading: false,
             selectedSort: '',
+            searchingQuery: '',
+            page: 1,
+            limit: 10,
+            totalPages: 0,
             sortOptons: [
               {value: 'title', name: 'По названию'},
               {value: 'body', name: 'По описанию'},
@@ -45,12 +62,17 @@ export default {
       this.fetchPosts();
     },
     watch: {
-
+      
     },
     computed: {
       sortedPosts(){
-        return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]));
-      }
+        return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.toString()
+        .localeCompare((post2[this.selectedSort]).toString()));
+      },
+      sortedFilteredPosts(){
+        return this.sortedPosts.filter(post => post.title.toLowerCase()
+        .includes(this.searchingQuery.toLowerCase()))
+      },
     },
     methods: {      
       addPost(postItem){
@@ -66,14 +88,25 @@ export default {
       async fetchPosts() {
         try {
           this.isPostsLoading = true
-          const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10');
+          const response = await axios
+          .get(`https://jsonplaceholder.typicode.com/posts`, {
+            params: {
+              _page: this.page,
+              _limit: this.limit
+            }
+          });
           this.posts = response.data;
+          this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
         } catch (e) {
           alert('Error: ' + e.toString())
         } finally {
           this.isPostsLoading = false
         }
       },
+      changePage(pageNumber){
+        this.page=pageNumber
+        this.fetchPosts();
+      }
     },
 }
 </script>
@@ -95,6 +128,18 @@ export default {
     display: flex;
     justify-content: space-between;
   }
-  
+  .pagination__wrapper{
+    display: flex;
+    margin-top: 15px;
+  }
+
+  .pagination__item {
+    border: 1px solid black;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .current-page {
+    border: 2px solid teal
+  }
   
 </style>
