@@ -15,7 +15,8 @@
     </my-dialog>  
     <post-list :posts="sortedFilteredPosts" @remove='removePost' v-if="!isPostsLoading" /> 
     <h2 v-else>Идет загрузка...</h2>
-    <div class="pagination__wrapper">
+    <div ref="observer" class="observer"></div>
+    <!-- <div class="pagination__wrapper">
       <div 
         :key="pageNumber" 
         v-for="pageNumber in totalPages" 
@@ -26,7 +27,7 @@
         }" >
           {{pageNumber}}
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -60,9 +61,25 @@ export default {
     },
     mounted() {
       this.fetchPosts();
+
+      const options = {
+          rootMargin: '0px',
+          threshold: 1.0
+      }
+      const callback = (entries, observer) => {
+          /* Content excerpted, show below */
+          if (entries[0].isIntersecting) {
+            this.loadMorePosts()
+          }
+                
+      };
+      const observer = new IntersectionObserver(callback, options);
+      observer.observe(this.$refs.observer);
     },
     watch: {
-      
+      // page(){
+      //   this.fetchPosts();
+      // }
     },
     computed: {
       sortedPosts(){
@@ -103,10 +120,26 @@ export default {
           this.isPostsLoading = false
         }
       },
-      changePage(pageNumber){
-        this.page=pageNumber
-        this.fetchPosts();
-      }
+      async loadMorePosts() {
+        try {
+          this.page +=1;
+          const response = await axios
+          .get(`https://jsonplaceholder.typicode.com/posts`, {
+            params: {
+              _page: this.page,
+              _limit: this.limit
+            }
+          });
+          this.posts = [...this.posts, ...response.data];
+          this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
+        } catch (e) {
+          alert('Error: ' + e.toString())
+        } finally {
+        }
+      },
+      // changePage(pageNumber){
+      //   this.page=pageNumber
+      // }
     },
 }
 </script>
@@ -140,6 +173,10 @@ export default {
   }
   .current-page {
     border: 2px solid teal
+  }
+  .observer{
+    height:30px;
+    background-color:aqua;
   }
   
 </style>
