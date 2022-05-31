@@ -1,7 +1,10 @@
 <template>
   <div >
     <h1>Страница с постами</h1>
-    <my-input v-model="searchingQuery" placeholder='Поиск' />
+    <my-input
+     v-model="searchingQuery"
+      placeholder='Поиск'
+      v-focus />
     <div class="app__buttons">
       <my-button @click="openDialog" >Создать пост        
       </my-button>
@@ -15,19 +18,7 @@
     </my-dialog>  
     <post-list :posts="sortedFilteredPosts" @remove='removePost' v-if="!isPostsLoading" /> 
     <h2 v-else>Идет загрузка...</h2>
-    <div ref="observer" class="observer"></div>
-    <!-- <div class="pagination__wrapper">
-      <div 
-        :key="pageNumber" 
-        v-for="pageNumber in totalPages" 
-        @click="changePage(pageNumber)"
-        class="pagination__item"
-        :class= "{
-          'current-page': pageNumber === page
-        }" >
-          {{pageNumber}}
-      </div>
-    </div> -->
+    <div v-intersection="loadMorePosts" class="observer"></div>    
   </div>
 </template>
 
@@ -62,19 +53,7 @@ export default {
     mounted() {
       this.fetchPosts();
 
-      const options = {
-          rootMargin: '0px',
-          threshold: 1.0
-      }
-      const callback = (entries, observer) => {
-          /* Content excerpted, show below */
-          if (entries[0].isIntersecting && this.page < this.totalPages) {
-            this.loadMorePosts()
-          }
-                
-      };
-      const observer = new IntersectionObserver(callback, options);
-      observer.observe(this.$refs.observer);
+      
     },
     watch: {
       // page(){

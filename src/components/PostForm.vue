@@ -2,10 +2,11 @@
   <form @submit.prevent>
     <h2 class="header">Новый пост</h2>
     <my-input 
-      v-model='post.title'      
+      v-model='post.title'     
+      v-focus 
       placeholder="Название" />
     <my-input 
-      v-model='post.body' 
+      v-model='post.body'       
       placeholder="Описание" />
     <my-button 
       @click="addPost"
